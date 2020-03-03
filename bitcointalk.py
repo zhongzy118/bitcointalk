@@ -47,8 +47,7 @@ async def parse_topic(url):
     print(f'parsing topic: {url}')
     data = await fetch(url)
     h = html.fromstring(data)
-    text = h.xpath('//div[@class="subject"]/following-sibling::div')[0].text_content()
-    text = text.replace('Today at', pendulum.utcnow().to_date_string())
+    text = h.xpath("div[@class='smalltext']//span/text()")[0]
     created = pendulum.parse(text)
     await db.execute(
         'update forum set created = $2 where url = $1',
